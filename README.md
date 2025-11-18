@@ -94,7 +94,7 @@ This repo includes documentation, notes, and SOPs for:
 
 ## 🔒 Data Privacy & Personal Security
 
-- Alias domain strategy (qalias.me, proton.me)  
+- Alias domain strategy
 - Email retention policies  
 - Zero-knowledge storage workflows  
 - VOIP privacy options  
