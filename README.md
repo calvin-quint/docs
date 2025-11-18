@@ -1,4 +1,4 @@
-# Calvin’s IT Documentation Repository
+# IT Documentation Repository
 
 Welcome to my centralized **IT Documentation & Knowledge Base**.  
 This repository contains my work across **cybersecurity, infrastructure, cloud, Intune, KQL, Linux servers, Azure, Entra ID, incident response, homelab, and data-privacy engineering**.
