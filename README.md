@@ -1,6 +1,4 @@
-# docs
-guides and tutorials
-
+Calvin’s IT Documentation Repository
 
 Welcome to my centralized IT Documentation & Knowledge Base.
 This repository contains my work across cybersecurity, infrastructure, cloud, Intune, KQL, Linux servers, Azure, Entra ID, incident response, homelab, and data-privacy engineering.
@@ -201,3 +199,7 @@ Provide templates for future roles or projects
 
 This is a living repository.
 I update it weekly as part of my Weekly Knowledge Summary Project, which consolidates all lessons learned, new detections, and configurations across my projects.
+
+🙌 Contributions
+
+This is a personal repo — but feedback from colleagues, mentors, and the community is always appreciated.
