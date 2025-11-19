@@ -14,7 +14,7 @@ DNS Management Access: To configure SPF, DKIM, and DMARC.
 
 PowerShell Access: Installed with Az modules for testing and automation.
 
-2. Create ACS Resource
+## 2. Create ACS Resource
 Go to Azure Portal.
 
 Navigate to Create a resource > Communication Services.
