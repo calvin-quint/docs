@@ -127,9 +127,9 @@ New-AzEmailServiceSenderUsername `
 New-AzEmailServiceSenderUsername `
     -ResourceGroupName IT_Management `
     -EmailServiceName OP `
-    -DomainName smtp.omniapartners.com `
+    -DomainName smtp.example.com `
     -SenderUsername curator -Username curator
-This sets up curator@smtp.omniapartners.com.
+This sets up curator@smtp.example.com.
 
 ## 9. Test SMTP Relay Using PowerShell
 $smtpCredentials = Get-Credential 
