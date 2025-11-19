@@ -51,7 +51,7 @@ https://packages.microsoft.com/config/
 
 Supported Linux distributions and dependencies are listed in Microsoft documentation.
 
-References
-Microsoft Defender for Endpoint on Linux – Installer Script
+## References
+[Microsoft Defender for Endpoint on Linux – Installer Script](https://learn.microsoft.com/en-us/defender-endpoint/linux-installer-script)
 
-Microsoft Linux Packages Repository
+[Microsoft Linux Packages Repository](https://learn.microsoft.com/en-us/linux/packages)
