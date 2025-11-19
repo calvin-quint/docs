@@ -105,7 +105,7 @@ Setting	Value
 SMTP Server	smtp.azurecomm.net
 SMTP Username	
 <App Name>.<Application ID>.<Tenant ID>
-IT-Ops-Communication-Service.4a97118c-f293-4ab5-8645-e9f32d1547ce.1bd768b7-86dd-4ae8-8cd2-038cbb7d165c
+IT-Ops-Communication-Service.
 SMTP Password	Client Secret from App Registration
 ## 8. Create MailFrom Address Using PowerShell
 Run the following in PowerShell:
@@ -134,8 +134,8 @@ This sets up curator@smtp.omniapartners.com.
 ## 9. Test SMTP Relay Using PowerShell
 $smtpCredentials = Get-Credential 
 $sendMailMessageSplat = @{
-    From = 'noreply@smtp.omniapartners.com'
-    To = 'servicedesk@omniapartners.com'
+    From = 'noreply@smtp.example./com'
+    To = 'servicedesk@example.com'
     Subject = 'Test Email'
     Body = "This is a test email"
     Priority = 'High'
