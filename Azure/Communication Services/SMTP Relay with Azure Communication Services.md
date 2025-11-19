@@ -23,7 +23,7 @@ Fill in resource details and click Create.
 
 After deployment, open the resource and go to the Email blade.
 
-3. Add Custom Domain to ACS
+## 3. Add Custom Domain to ACS
 In the ACS resource, go to Email > Domains.
 
 Click + Add.
@@ -36,7 +36,7 @@ Azure will provide SPF, DKIM*, and MX DNS entries.
 Ex: for "smtp.omniapartners.com",
        Azure provides the CNAME      "selector2-azurecomm-prod-net._domainkey",
        but you'll need to change it to  "selector2-azurecomm-prod-net._domainkey.smtp".
-4. Configure DNS Records
+## 4. Configure DNS Records
 ✅ SPF Record
 Add the following TXT record at your DNS provider:
 
@@ -53,7 +53,7 @@ Ensure the subdomain smtp is reflected correctly in both name and value.
 
 ✅ DMARC Record
 Name: _dmarc Type: TXT Value: v=DMARC1; p=none; rua=mailto:dmarc-reports@smtp.omniapartners.com
-5. Create and Assign Custom Role
+## 5. Create and Assign Custom Role
 ✅ Create Custom Role
 Go to Subscriptions > Access control (IAM).
 
@@ -83,7 +83,7 @@ Find and select your App Registration (Service Principal).
 
 Click Save.
 
-6. Configure App Registration (Service Principal)
+## 6. Configure App Registration (Service Principal)
 Go to Azure Active Directory > App registrations.
 
 Click + New registration.
@@ -100,14 +100,14 @@ Directory (tenant) ID
 
 Client Secret
 
-7. Set Up SMTP Relay
+## 7. Set Up SMTP Relay
 Setting	Value
 SMTP Server	smtp.azurecomm.net
 SMTP Username	
 <App Name>.<Application ID>.<Tenant ID>
 IT-Ops-Communication-Service.4a97118c-f293-4ab5-8645-e9f32d1547ce.1bd768b7-86dd-4ae8-8cd2-038cbb7d165c
 SMTP Password	Client Secret from App Registration
-8. Create MailFrom Address Using PowerShell
+## 8. Create MailFrom Address Using PowerShell
 Run the following in PowerShell:
 
 New-AzEmailServiceSenderUsername `
@@ -131,7 +131,7 @@ New-AzEmailServiceSenderUsername `
     -SenderUsername curator -Username curator
 This sets up curator@smtp.omniapartners.com.
 
-9. Test SMTP Relay Using PowerShell
+## 9. Test SMTP Relay Using PowerShell
 $smtpCredentials = Get-Credential 
 $sendMailMessageSplat = @{
     From = 'noreply@smtp.omniapartners.com'
