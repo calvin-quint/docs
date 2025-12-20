@@ -1,4 +1,4 @@
-🧠 Introduction to Networking
+#🧠 Introduction to Networking
 🎯 Why This Matters for Offensive Security
 
 Networking knowledge allows you to:
@@ -13,7 +13,7 @@ Avoid blind exploitation
 
 Enumeration without networking knowledge is guessing.
 
-🌐 TCP/IP Model (OffSec View)
+##🌐 TCP/IP Model (OffSec View)
 
 You don’t need to memorize all layers — only how attacks map.
 
@@ -41,7 +41,7 @@ Connectionless
 
 Used by: DNS, SNMP, NTP
 
-🧠 OSCP reality: Most exploitable services are TCP.
+##🧠 OSCP reality: Most exploitable services are TCP.
 
 🔌 Common Ports (Must Know)
 21   FTP
@@ -58,7 +58,7 @@ Used by: DNS, SNMP, NTP
 
 If 80/443 is open → web attack surface exists.
 
-📍 IP Addressing Basics
+##📍 IP Addressing Basics
 
 IPv4 format: x.x.x.x
 
@@ -72,7 +72,7 @@ Private ranges:
 
 Internal IPs often appear after initial foothold.
 
-🧱 Firewalls (Attacker View)
+##🧱 Firewalls (Attacker View)
 
 Firewalls:
 
