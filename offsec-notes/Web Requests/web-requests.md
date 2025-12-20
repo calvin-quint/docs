@@ -92,8 +92,10 @@ Server looks it up and authorizes
 
 ## 🔁 Session Reuse (HTB / OSCP Pattern)
 Step 1 — Obtain a session cookie
+```
 curl -i -X POST http://<SERVER_IP>:<PORT>/login.php \
   -d "username=admin&password=admin"
+```
 
 
 Copy:
@@ -101,10 +103,12 @@ Copy:
 PHPSESSID=abc123xyz
 
 Step 2 — Reuse cookie on another endpoint
+```
 curl -X POST http://<SERVER_IP>:<PORT>/search.php \
   -H "Cookie: PHPSESSID=abc123xyz" \
   -H "Content-Type: application/json" \
   -d '{"search":"flag"}'
+  ```
 
 
 🧠 This works because authentication persists across endpoints.
@@ -171,74 +175,118 @@ Abused
 
 ## 🧪 curl – Web Requests Cheat Sheet
 Basic GET
+```
 curl http://target/
+```
 
 Verbose (see headers)
+```
 curl -v http://target/
+```
 
 Headers only
+```
 curl -I http://target/
+```
 
 Follow redirects
+```
 curl -L http://target/
+```
 
 Custom User-Agent
+```
 curl -A "Mozilla/5.0" http://target/
+```
 
 GET with parameters
+```
 curl "http://target/page?id=1"
+```
 
 POST (form)
+```
 curl -X POST http://target/login \
   -d "username=admin&password=admin"
+  ```
 
 POST (JSON)
+```
 curl -X POST http://target/api \
   -H "Content-Type: application/json" \
   -d '{"key":"value"}'
+  ```
 
 PUT
+```
 curl -X PUT http://target/resource -d "data=test"
+```
 
 DELETE
+```
 curl -X DELETE http://target/resource
+```
 
 Send cookie (copy/paste)
+```
 curl -b "PHPSESSID=abc123xyz" http://target/dashboard
+```
 
 Multiple cookies
+```
 curl -b "session=abc123; role=user" http://target/admin
+```
 
 Basic Auth (automatic)
+```
 curl http://admin:admin@target/
+```
 
 Basic Auth (manual)
+```
 curl -H "Authorization: Basic YWRtaW46YWRtaW4=" http://target/
+```
 
 Generate Base64 token
+```
 echo -n "admin:admin" | base64
+```
 
 Custom headers
+```
 curl -H "X-Forwarded-For: 127.0.0.1" http://target/
+```
 
 Change Host header
+```
 curl -H "Host: admin.target" http://target/
+```
 
 Upload file
+```
 curl -X POST http://target/upload \
   -F "file=@shell.php"
+```
 
 Download file
+```
 curl -O http://target/file.txt
+```
 
 Ignore SSL errors
+```
 curl -k https://target/
+```
 
 OPTIONS (allowed methods)
+```
 curl -X OPTIONS http://target/
+```
 
 Timing-based testing
+```
 curl -w "%{time_total}\n" -o /dev/null -s http://target/
+```
 
 ## 🔑 OSCP One-Line Rule (Memorize)
 
