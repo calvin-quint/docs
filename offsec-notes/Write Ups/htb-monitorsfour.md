@@ -198,6 +198,10 @@ A public Python proof-of-concept for CVE-2025-24367 was evaluated:
 
 https://github.com/SoftAndoWetto/CVE-2025-24367-PoC-Cacti
 
+
+
+https://github.com/r0tn3x/CVE-2025-24367/blob/main/
+
 Observations
 
 The CVE applies to Cacti 1.2.28
